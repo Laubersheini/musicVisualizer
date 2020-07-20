@@ -55,3 +55,22 @@ function updateSingleColor(){
 barColor = document.getElementById("singleColor").value;
 
 }
+function changeBarCount(){
+  var count = parseInt(document.getElementById("barCount").value)
+  function power_of_2(n) {
+   if (typeof n !== 'number')
+        return 'Not a number';
+
+      return n && (n & (n - 1)) === 0;
+  }
+if(power_of_2(count)&&count>=16){
+
+barCount = count;
+fftSize = count *2;
+barCount-= rightBarCutoff;
+analyser.fftSize = fftSize;
+
+generateRainbow();
+}
+
+}

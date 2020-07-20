@@ -86,7 +86,15 @@ function render() {
 
   ctx.fillRect(i/barCount*canvas.width ,canvas.height-value/255*canvas.height,
     canvas.width/barCount   ,  canvas.height);
+}else if(currentColor == "blockMode"){
+  var blockSize = canvas.width/barCount;
+  
+
+
+
 }
+
+
   }
 
 requestAnimationFrame(render)
