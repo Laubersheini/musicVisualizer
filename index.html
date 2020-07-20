@@ -6,15 +6,58 @@
     <title></title>
   </head>
   <body>
-    <img  src="./gear.png"  id="myBtn" />
-    <!-- The Modal -->
+
+
+<!-- The Modal -->
 <div id="myModal" class="modal">
-
-
+    <span class="close">&times;</span>
     <div id="controls" class="modal-content">
-       <input type="range" step="0.001" min="0" max="10" value="1" oninput="updateGain()" id="gainSlider">
-      </div>
+        <input type="range" step="0.001" min="0" max="10" value="1" oninput="updateGain()" id="gainSlider">
+            <br  />
+            <table>
+              <tr>
+                <td>
+                  <input type="radio" name="coloring" onchange="updateColoring()" value="gyr">
+                  <label>green-yellow-red</label><br>
+                </td>
+                <td>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+              <input type="radio" name="coloring" onchange="updateColoring()" value="singleColor">
+              <label >single Color</label><br>
+            </td>
+            <td>
+              <input id="singleColor" oninput="updateSingleColor()"/>
+            </td>
+          </tr>
+
+
+          <tr>
+            <td>
+              <input type="radio" name="coloring"  onchange="updateColoring()" value="rainbow">
+              <label>rainbow</label>
+            </td>
+            <td>
+
+            </td>
+          </tr>
+            </table>
+
+
+    </div>
+</div>
+
+
+
 <canvas id="canvas" width="500" height="500"></canvas>
+
+
+    <img  id="myBtn" src="./gear.png"  />
+    <script src="./settings.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
