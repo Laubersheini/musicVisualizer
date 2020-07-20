@@ -12,7 +12,7 @@ const colorTresholdes = [170,200,255]//must be sorted
 const backgroundColor = "#000000"
 
 var currentColor = "rainbow";
-var currentStyle = "blockMode" // "bar"
+var currentStyle = "circleMode" // "bar", "blockMode","circleMode"
 var rainbowColors = [];
 var barColor = "#ffffff";
 var canvas = document.getElementById("canvas");
@@ -117,9 +117,21 @@ function render() {
         y++
       }
 
+    }else if(currentStyle =="circleMode"){
+      var blockSize = canvas.width/barCount;
+      var blockCount = Math.floor(canvas.height/blockSize);
+      var valuePerBlock = 255/blockCount;
+      let y =0;
+      let j = 0;
+      ctx.fillStyle = choseColor(i,0)
+      while(y<blockCount&&y*valuePerBlock<value){
 
-
-
+        ctx.fillStyle = choseColor(i,y*valuePerBlock);
+        ctx.beginPath();
+        ctx.arc(i/barCount*canvas.width +blockSize/2,canvas.height-y*blockSize+blockSize/2,  blockSize/2-1,0,2*Math.PI);
+        ctx.fill();
+        y++
+      }
 
 }
 
