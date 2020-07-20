@@ -11,6 +11,7 @@ const colors = [green,yellow,red];
 const colorTresholdes = [170,200,255]//must be sorted
 const backgroundColor = "#000000"
 
+var movingRainbowSpeed = 0.001;
 var currentColor = "rainbow";
 var currentStyle = "circleMode" // "bar", "blockMode","circleMode"
 var rainbowColors = [];
@@ -47,6 +48,7 @@ var gain = context.createGain();
 }
 
 
+var movingRainbowOffset =0;
 function choseColor(index,value){
 
   switch (currentColor) {
@@ -65,6 +67,9 @@ function choseColor(index,value){
     case "rainbow":
     return rainbowColors[index];
     break;
+    case "movingRainbow":
+    movingRainbowOffset -= movingRainbowSpeed;
+    return  rainbowColors[(Math.abs(index +Math.floor(movingRainbowOffset)))% rainbowColors.length];
     default:
         return "#ffffff";
   }
@@ -171,6 +176,19 @@ for(let i=barCount/4 *3; i<barCount;i++){
   g -= stepSize;
   rainbowColors[i] = "#"+ Math.round(r).toString(16).padStart(2,"0")+Math.round(g).toString(16).padStart(2,"0")+Math.round(b).toString(16).padStart(2,"0");
 }
+//blue
+
+//fade back to red for the moving rainbow mode
+for(let i=barCount; i<barCount*1.25;i++){
+  r += stepSize;
+  rainbowColors[i] = "#"+ Math.round(r).toString(16).padStart(2,"0")+Math.round(g).toString(16).padStart(2,"0")+Math.round(b).toString(16).padStart(2,"0");
+}
+//violet
+for(let i=barCount*1.25 ;i<barCount*1.5;i++){
+  b -= stepSize;
+  rainbowColors[i] = "#"+ Math.round(r).toString(16).padStart(2,"0")+Math.round(g).toString(16).padStart(2,"0")+Math.round(b).toString(16).padStart(2,"0");
+}
+//red
 }
 generateRainbow();
 window.addEventListener('resize', resize);

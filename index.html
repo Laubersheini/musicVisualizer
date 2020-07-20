@@ -28,13 +28,23 @@
               <tr>
                 <td>
               <input type="radio" name="coloring" onchange="updateColoring()" value="singleColor">
-              <label >single Color</label><br>
+              <label >single color</label><br>
             </td>
             <td>
               <input id="singleColor" oninput="updateSingleColor()"/>
             </td>
           </tr>
 
+
+          <tr>
+            <td>
+              <input type="radio" name="coloring"  onchange="updateColoring()" value="movingRainbow">
+              <label>moving rainbow</label>
+            </td>
+            <td>
+              <input type="range" step="0.0001" min="-0.01" max="0.01" value="0.001" oninput="updateRainbowSpeed()" id="rainbowSpeed">
+            </td>
+          </tr>
 
           <tr>
             <td>
@@ -45,7 +55,6 @@
 
             </td>
           </tr>
-
 
           </tr>
             <tr>

@@ -32,7 +32,11 @@ gain.gain.value = document.getElementById("gainSlider").value
 
 
 }
+function updateRainbowSpeed(){
 
+movingRainbowSpeed = document.getElementById("rainbowSpeed").value
+console.log(movingRainbowSpeed)
+}
 
 function getRadioValue(name){
   var radios = document.getElementsByName(name);
