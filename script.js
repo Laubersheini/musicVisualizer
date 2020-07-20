@@ -1,6 +1,6 @@
 var AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 context = new AudioContext();
-var barCount = 256 //must be a power of 2 //2048 is the most my laptop can handle
+var barCount = 64 //must be a power of 2 //2048 is the most my laptop can handle
 const fftsize =  barCount*2;
 const rightBarCutoff = 0; //fft gets frequencies higher than 20kHz that are not hearable/ relevant for music
  barCount -= rightBarCutoff
@@ -11,7 +11,7 @@ const colors = [green,yellow,red];
 const colorTresholdes = [170,200,255]//must be sorted
 const backgroundColor = "#000000"
 
-var currentColor = "gyr";
+var currentColor = "blockMode";
 var rainbowColors = [];
 var barColor = "#ffffff";
 var canvas = document.getElementById("canvas");
@@ -88,15 +88,29 @@ function render() {
     canvas.width/barCount   ,  canvas.height);
 }else if(currentColor == "blockMode"){
   var blockSize = canvas.width/barCount;
-  
+  var blockCount = Math.floor(canvas.height/blockSize);
+  var valuePerBlock = 255/blockCount;
+  let y =0;
+  let j = 0;
+  ctx.fillStyle = colors[0]
+  while(y<blockCount&&y*valuePerBlock<value){
+    if(y*valuePerBlock>colorTresholdes[j]){
+      j++
+      ctx.fillStyle = colors[j]
+
+    }
+
+    ctx.fillRect(i/barCount*canvas.width ,canvas.height-y*blockSize,blockSize-2   , blockSize-2);
+    y++
+  }
 
 
 
-}
 
 
   }
 
+}
 requestAnimationFrame(render)
 }
 function onStreamError(){
