@@ -11,11 +11,13 @@ const colors = [green,yellow,red];
 const colorTresholdes = [170,200,255]//must be sorted
 const backgroundColor = "#000000"
 
-var currentColor = "blockMode";
+var currentColor = "gyr";
+var currentStyle = "bar"
 var rainbowColors = [];
 var barColor = "#ffffff";
 var canvas = document.getElementById("canvas");
 ctx = canvas.getContext("2d");
+
 
 
 if (navigator.mozGetUserMedia) {
@@ -45,6 +47,33 @@ var gain = context.createGain();
 }
 
 
+function choseColor(index,value){
+
+  switch (currentColor) {
+    case "gyr":
+
+      for(let i=0;i<colorTresholdes.length;i++){
+
+        if(value<=colorTresholdes[i]){
+          return colors[i];
+        }
+      }
+      break;
+    case "singleColor":
+    return barColor;
+    break;
+    case "rainbow":
+    return rainbowColors[index];
+    break;
+    default:
+        return "#ffffff";
+  }
+
+
+
+}
+
+
 function render() {
   var freq = new Uint8Array(this.analyser.frequencyBinCount);
   analyser.getByteFrequencyData(freq);
@@ -61,9 +90,9 @@ function render() {
   //  ctx.fillStyle = "#000000";
     //ctx.fillStyle = "#" + value.toString(16) +""+ (255-value).toString(16)+"00"; for weird colors that slowly blend towards red
 
-  if(currentColor == "gyr"){
+  if(currentStyle == "bar")
   for(let j=colorTresholdes.length-1;j>=0;j--){
-      ctx.fillStyle = colors[j]
+      ctx.fillStyle = choseColor(i,colorTresholdes[j]);
       if(value<colorTresholdes[j]){
         ctx.fillRect(i/barCount*canvas.width ,canvas.height-value/255*canvas.height,
           canvas.width/barCount   ,  canvas.height);
@@ -73,46 +102,31 @@ function render() {
 
       }
 
-  }
 
-}else if(currentColor== "singleColor"){
-  ctx.fillStyle = barColor;
+    }else if(currentStyle == "blockMode"){
+      var blockSize = canvas.width/barCount;
+      var blockCount = Math.floor(canvas.height/blockSize);
+      var valuePerBlock = 255/blockCount;
+      let y =0;
+      let j = 0;
+      ctx.fillStyle = choseColor(i,0)
+      while(y<blockCount&&y*valuePerBlock<value){
 
-  ctx.fillRect(i/barCount*canvas.width ,canvas.height-value/255*canvas.height,
-    canvas.width/barCount   ,  canvas.height);
-
-}else if (currentColor == "rainbow") {
-  ctx.fillStyle = rainbowColors[i];
-
-  ctx.fillRect(i/barCount*canvas.width ,canvas.height-value/255*canvas.height,
-    canvas.width/barCount   ,  canvas.height);
-}else if(currentColor == "blockMode"){
-  var blockSize = canvas.width/barCount;
-  var blockCount = Math.floor(canvas.height/blockSize);
-  var valuePerBlock = 255/blockCount;
-  let y =0;
-  let j = 0;
-  ctx.fillStyle = colors[0]
-  while(y<blockCount&&y*valuePerBlock<value){
-    if(y*valuePerBlock>colorTresholdes[j]){
-      j++
-      ctx.fillStyle = colors[j]
-
-    }
-
-    ctx.fillRect(i/barCount*canvas.width ,canvas.height-y*blockSize,blockSize-2   , blockSize-2);
-    y++
-  }
+        ctx.fillStyle = choseColor(i,y*valuePerBlock);
+        ctx.fillRect(i/barCount*canvas.width ,canvas.height-y*blockSize,blockSize-2   , blockSize-2);
+        y++
+      }
 
 
 
 
 
-  }
+}
 
 }
 requestAnimationFrame(render)
 }
+
 function onStreamError(){
 console.warn("onStreamError")
 
