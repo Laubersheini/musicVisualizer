@@ -34,27 +34,36 @@ gain.gain.value = document.getElementById("gainSlider").value
 }
 
 
-
-function updateColoring(){
-
-  var radios = document.getElementsByName('coloring');
+function getRadioValue(name){
+  var radios = document.getElementsByName(name);
   var radioValue;
 for (var i = 0, length = radios.length; i < length; i++) {
   if (radios[i].checked) {
     // do whatever you want with the checked radio
-    radioValue= radios[i].value;
-
+    return radios[i].value;
     // only one radio can be logically checked, don't check the rest
-    break;
   }
 }
+
+
+}
+
+function updateColoring(){
+
+
 barColor = document.getElementById("singleColor").value;
-currentColor = radioValue;
+currentColor = getRadioValue("coloring");
 }
 function updateSingleColor(){
 barColor = document.getElementById("singleColor").value;
 
 }
+function updateStyle(){
+currentStyle = getRadioValue("style");
+}
+
+
+
 function changeBarCount(){
   var count = parseInt(document.getElementById("barCount").value)
   function power_of_2(n) {
