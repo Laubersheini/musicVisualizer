@@ -9,8 +9,8 @@ const yellow = "#ffff00";
 const red = "#ff0000"
 const colors = [green,yellow,red];
 const colorTresholdes = [170,200,255]//must be sorted
-const backgroundColor = "#000000"
 
+var backgroundColor = "#000000"
 var movingRainbowSpeed = 0.001;
 var currentColor = "rainbow";
 var currentStyle = "circleMode" // "bar", "blockMode","circleMode"
@@ -152,6 +152,7 @@ console.warn("onStreamError")
 //callbacks
 
 function generateRainbow(){
+  rainbowColors = [];
   var r = 255;
   var g = 0;
   var b = 0;

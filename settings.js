@@ -66,7 +66,10 @@ function updateStyle(){
 currentStyle = getRadioValue("style");
 }
 
+function updateBackgroundColor(){
+backgroundColor = document.getElementById("backgroundColor").value;
 
+}
 
 function changeBarCount(){
   var count = parseInt(document.getElementById("barCount").value)
