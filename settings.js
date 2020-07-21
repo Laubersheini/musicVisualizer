@@ -35,7 +35,7 @@ gain.gain.value = document.getElementById("gainSlider").value
 function updateRainbowSpeed(){
 
 movingRainbowSpeed = document.getElementById("rainbowSpeed").value
-console.log(movingRainbowSpeed)
+//console.log(movingRainbowSpeed)
 }
 
 function getRadioValue(name){
@@ -68,7 +68,11 @@ currentStyle = getRadioValue("style");
 
 function updateBackgroundColor(){
 backgroundColor = document.getElementById("backgroundColor").value;
-
+ squareCanvas = generateSquares()
+}
+function updateOffBlocks(){
+  showDisabledBlocks = document.getElementById("offBlocks").checked
+  console.log(showDisabledBlocks)
 }
 
 function changeBarCount(){
@@ -85,7 +89,7 @@ barCount = count;
 fftSize = count *2;
 barCount-= rightBarCutoff;
 analyser.fftSize = fftSize;
-
+ squareCanvas = generateSquares()
 generateRainbow();
 }
 

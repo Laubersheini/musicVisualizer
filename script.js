@@ -9,11 +9,15 @@ const yellow = "#ffff00";
 const red = "#ff0000"
 const colors = [green,yellow,red];
 const colorTresholdes = [170,200,255]//must be sorted
+const circleSpacing = 1;
+
+var showDisabledBlocks = true;
+var disabledColor = "#101010";
 
 var backgroundColor = "#000000"
 var movingRainbowSpeed = 0.001;
 var currentColor = "rainbow";
-var currentStyle = "circleMode" // "bar", "blockMode","circleMode"
+var currentStyle = "blockMode" // "bar", "blockMode","circleMode"
 var rainbowColors = [];
 var barColor = "#ffffff";
 var canvas = document.getElementById("canvas");
@@ -49,7 +53,10 @@ var gain = context.createGain();
 
 
 var movingRainbowOffset =0;
-function choseColor(index,value){
+function choseColor(index,value,disabled){
+  if(disabled){
+    return disabledColor;
+  }
 
   switch (currentColor) {
     case "gyr":
@@ -84,9 +91,27 @@ function render() {
   analyser.getByteFrequencyData(freq);
 //console.log(freq)
   // Iterate over the frequencies.
-  ctx.fillStyle = backgroundColor;
-  ctx.fillRect(0,0,canvas.width,canvas.height)
 
+  if(showDisabledBlocks){
+    switch (currentStyle) {
+      case "blockMode":
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(squareCanvas,0,0);
+        break;
+        case "circleMode":
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(circleCanvas,0,0);
+        break;
+      default:
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0,0,canvas.width,canvas.height)
+
+    }
+  }else{
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0,0,canvas.width,canvas.height)
+
+  }
   for (var i = 0; i < freq.length; i++) {
     var value;
 
@@ -114,6 +139,7 @@ function render() {
       var valuePerBlock = 255/blockCount;
       let y =0;
       let j = 0;
+
       ctx.fillStyle = choseColor(i,0)
       while(y<blockCount&&y*valuePerBlock<value){
 
@@ -121,6 +147,7 @@ function render() {
         ctx.fillRect(i/barCount*canvas.width ,canvas.height-y*blockSize,blockSize-2   , blockSize-2);
         y++
       }
+
 
     }else if(currentStyle =="circleMode"){
       var blockSize = canvas.width/barCount;
@@ -133,7 +160,7 @@ function render() {
 
         ctx.fillStyle = choseColor(i,y*valuePerBlock);
         ctx.beginPath();
-        ctx.arc(i/barCount*canvas.width +blockSize/2,canvas.height-y*blockSize+blockSize/2,  blockSize/2-1,0,2*Math.PI);
+        ctx.arc(i/barCount*canvas.width +blockSize/2,canvas.height-y*blockSize+blockSize/2,  blockSize/2-circleSpacing,0,2*Math.PI);
         ctx.fill();
         y++
       }
@@ -149,7 +176,48 @@ console.warn("onStreamError")
 
 }
 
-//callbacks
+var squareCanvas;
+var circleCanvas;
+
+function generateSquares(){
+
+  var blockSize = canvas.width/barCount;
+  var blockCount = Math.floor(canvas.height/blockSize);
+  var valuePerBlock = 255/blockCount;
+  var squareCanvas=document.createElement('canvas');
+  circleCanvas = document.createElement("canvas");
+  var squareCtx=squareCanvas.getContext('2d');
+  squareCanvas.width=canvas.width;
+  squareCanvas.height=canvas.height;
+  squareCtx.fillStyle = backgroundColor;
+  squareCtx.fillRect(0,0,canvas.width,canvas.height)
+
+  var ctx=circleCanvas.getContext('2d');
+  circleCanvas.width=canvas.width;
+  circleCanvas.height=canvas.height;
+  ctx.fillStyle = backgroundColor;
+  ctx.fillRect(0,0,canvas.width,canvas.height)
+    for (var i = 0; i < barCount; i++) {
+
+  //    squareCtx.fillRect(0,0,canvas.width,canvas.height)
+      squareCtx.fillStyle = choseColor(i,0,true)
+
+      for(let j=0;j<255;j++){//disabled Blocks
+        squareCtx.fillStyle = choseColor(i,0,true)
+        squareCtx.fillRect(i/barCount*canvas.width ,canvas.height-j*blockSize,blockSize-2   , blockSize-2);
+
+
+        ctx.fillStyle = choseColor(i,0,true);//probably wrong?
+        ctx.beginPath();
+        ctx.arc(i/barCount*canvas.width +blockSize/2,canvas.height-j*blockSize+blockSize/2,  blockSize/2-circleSpacing,0,2*Math.PI);
+        ctx.fill();
+      }
+
+
+    }
+    return squareCanvas
+}
+
 
 function generateRainbow(){
   rainbowColors = [];
@@ -196,6 +264,7 @@ window.addEventListener('resize', resize);
 function resize(){
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
+ squareCanvas = generateSquares()
+ console.log("resized")
 }
 resize();
