@@ -17,7 +17,7 @@ var disabledColor = "#101010";
 var backgroundColor = "#000000"
 var movingRainbowSpeed = 0.001;
 var currentColor = "rainbow";
-var currentStyle = "blockMode" // "bar", "blockMode","circleMode"
+var currentStyle = "lineMode" // "bar", "blockMode","circleMode"
 var rainbowColors = [];
 var barColor = "#ffffff";
 var canvas = document.getElementById("canvas");
@@ -112,6 +112,15 @@ function render() {
     ctx.fillRect(0,0,canvas.width,canvas.height)
 
   }
+
+  if(currentStyle =="lineMode"){
+    let y =0;
+    let j = 0;
+    ctx.strokeStyle = "#ffffff"
+    ctx.beginPath();
+    ctx.moveTo(canvas.width/barCount*0.5,canvas.height-freq[i]/255*canvas.height)
+
+  }
   for (var i = 0; i < freq.length; i++) {
     var value;
 
@@ -165,9 +174,14 @@ function render() {
         y++
       }
 
-}
+    }else if(currentStyle =="lineMode"){
+
+
+      ctx.lineTo(i*canvas.width/barCount+canvas.width/barCount*0.5,canvas.height-value/255*canvas.height)
+    }
 
 }
+if(currentStyle== "lineMode"){ctx.stroke()}
 requestAnimationFrame(render)
 }
 
