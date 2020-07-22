@@ -15,10 +15,10 @@ var rainbowGradiant; // for line mode
 var gyrPattern;
 var showDisabledBlocks = true;
 var disabledColor = "#101010";
-var lineModeFilled = false;
+var lineModeFilled = true;
 var backgroundColor = "#000000"
 var movingRainbowSpeed = 0.001;
-var currentColor = "rainbow";
+var currentColor = "movingRainbow";
 var currentStyle = "lineMode" // "bar", "blockMode","circleMode"
 var rainbowColors = [];
 var barColor = "#ffffff";
@@ -104,7 +104,9 @@ function chosePattern(index,value,disabled){
     return rainbowGradiant
     break;
     case "movingRainbow":
-    return rainbowGradiant; // TODO: needs to move
+    movingRainbowOffset -= movingRainbowSpeed *1000;
+    moveRainbow((Math.abs(index +Math.floor(movingRainbowOffset)))% (canvas.width-1)+1)
+    return movedRainbow
     default:
         return "#ffffff";
   }
@@ -140,7 +142,7 @@ function render() {
     ctx.fillRect(0,0,canvas.width,canvas.height)
 
     }
-    
+
     if(currentStyle =="lineMode"){
      let y =0;
      let j = 0;
@@ -316,21 +318,50 @@ for(let i=barCount*1.25 ;i<barCount*1.5;i++){
 }
 generateRainbow();
 
+
+
+
+var movingRainbowCanvas;
+var movedRainbow;
+function moveRainbow(dx){
+    console.log(dx)
+  var tmpCanvas = document.createElement("canvas");
+  var tmpCtx = tmpCanvas.getContext("2d");
+  tmpCanvas.height = canvas.height
+  tmpCanvas.width = canvas.width;
+  tmpCtx.drawImage(movingRainbowCanvas,0,0,canvas.width,canvas.height,dx,0,canvas.width-dx,canvas.height);
+  tmpCtx.drawImage(movingRainbowCanvas,canvas.width*1.5-dx,0,dx,canvas.height,0,0,dx,canvas.height);
+
+  movedRainbow = ctx.createPattern(tmpCanvas,"no-repeat")
+}
+
 function generateGradiants(){
   //for line mode
-  rainbowGradiant = ctx.createLinearGradient(0, 0, canvas.width, 0);
+  rainbowGradiant = ctx.createLinearGradient(0, 0, canvas.width*1.5, 0);
   rainbowGradiant.addColorStop(0, "red");
-  rainbowGradiant.addColorStop(0.25,"yellow")
-  rainbowGradiant.addColorStop(0.5, "green");
-  rainbowGradiant.addColorStop(0.75,"cyan")
-  rainbowGradiant.addColorStop(1,"blue")
+  rainbowGradiant.addColorStop(1/6,"yellow")
+  rainbowGradiant.addColorStop(2/6, "green");
+  rainbowGradiant.addColorStop(3/6,"cyan");
+  rainbowGradiant.addColorStop(4/6,"blue");
+  rainbowGradiant.addColorStop(5/6,"#ff00ff");
+  rainbowGradiant.addColorStop(1,"red")
+
+
+
+  movingRainbowCanvas = document.createElement("canvas");
+  var tmpCtx2 = movingRainbowCanvas.getContext("2d");
+  movingRainbowCanvas.width = canvas.width*1.5;
+  movingRainbowCanvas.height = canvas.height;
+  tmpCtx2.fillStyle = rainbowGradiant;
+  tmpCtx2.fillRect(0,0,movingRainbowCanvas.width,movingRainbowCanvas.height)
+
+
+
 
   var tmpCanvas = document.createElement("canvas");
   tmpCanvas.width = canvas.width;
   tmpCanvas.height = canvas.height;
   var tmpCtx = tmpCanvas.getContext("2d");
-
-
   for(let i=colorTresholdes.length-1;i>=0;i--){
     tmpCtx.fillStyle = colors[i]
    tmpCtx.fillRect(0,canvas.height-canvas.height* colorTresholdes[i]/255,canvas.width, canvas.height);
