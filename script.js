@@ -11,9 +11,10 @@ const colors = [green,yellow,red];
 const colorTresholdes = [170,200,255]//must be sorted
 const circleSpacing = 1;
 
+var rainbowGradiant; // for line mode
 var showDisabledBlocks = true;
 var disabledColor = "#101010";
-
+var lineModeFilled = false;
 var backgroundColor = "#000000"
 var movingRainbowSpeed = 0.001;
 var currentColor = "rainbow";
@@ -116,7 +117,7 @@ function render() {
   if(currentStyle =="lineMode"){
     let y =0;
     let j = 0;
-    ctx.strokeStyle = "#ffffff"
+
     ctx.beginPath();
     ctx.moveTo(canvas.width/barCount*0.5,canvas.height-freq[i]/255*canvas.height)
 
@@ -181,7 +182,26 @@ function render() {
     }
 
 }
-if(currentStyle== "lineMode"){ctx.stroke()}
+
+if(currentStyle== "lineMode"){
+  if(currentColor =="rainbow"||currentColor=="movingRainbow"){
+    ctx.fillStyle = rainbowGradiant;
+    ctx.strokeStyle = rainbowGradiant;
+  }else{
+    ctx.fillStyle = barColor;
+    ctx.strokeStyle = barColor;
+    }
+  if(lineModeFilled){
+
+    ctx.lineTo(canvas.width,canvas.height);
+    ctx.lineTo(0,canvas.height);
+    ctx.fill()
+  }else{
+
+    ctx.stroke()
+  }
+
+  }
 requestAnimationFrame(render)
 }
 
@@ -198,7 +218,7 @@ function generateSquares(){
   var blockSize = canvas.width/barCount;
   var blockCount = Math.floor(canvas.height/blockSize);
   var valuePerBlock = 255/blockCount;
-  var squareCanvas=document.createElement('canvas');
+  squareCanvas=document.createElement('canvas');
   circleCanvas = document.createElement("canvas");
   var squareCtx=squareCanvas.getContext('2d');
   squareCanvas.width=canvas.width;
@@ -274,11 +294,23 @@ for(let i=barCount*1.25 ;i<barCount*1.5;i++){
 //red
 }
 generateRainbow();
+
+function generateRainbowGradiant(){
+  //for line mode
+  rainbowGradiant = ctx.createLinearGradient(0, 0, canvas.width, 0);
+  rainbowGradiant.addColorStop(0, "red");
+  rainbowGradiant.addColorStop(0.25,"yellow")
+  rainbowGradiant.addColorStop(0.5, "green");
+  rainbowGradiant.addColorStop(0.75,"cyan")
+  rainbowGradiant.addColorStop(1,"blue")
+
+}
 window.addEventListener('resize', resize);
 function resize(){
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
- squareCanvas = generateSquares()
+generateSquares()
+generateRainbowGradiant();
  console.log("resized")
 }
 resize();

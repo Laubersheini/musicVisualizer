@@ -68,13 +68,17 @@ currentStyle = getRadioValue("style");
 
 function updateBackgroundColor(){
 backgroundColor = document.getElementById("backgroundColor").value;
- squareCanvas = generateSquares()
+ generateSquares()
 }
 function updateOffBlocks(){
   showDisabledBlocks = document.getElementById("offBlocks").checked
-  console.log(showDisabledBlocks)
+
 }
 
+function updateLineModeFilled(){
+  lineModeFilled = document.getElementById("lineModeFilled").checked
+
+}
 function changeBarCount(){
   var count = parseInt(document.getElementById("barCount").value)
   function power_of_2(n) {
@@ -89,7 +93,7 @@ barCount = count;
 fftSize = count *2;
 barCount-= rightBarCutoff;
 analyser.fftSize = fftSize;
- squareCanvas = generateSquares()
+ generateSquares()
 generateRainbow();
 }
 
