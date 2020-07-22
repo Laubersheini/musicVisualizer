@@ -12,6 +12,7 @@ const colorTresholdes = [170,200,255]//must be sorted
 const circleSpacing = 1;
 
 var rainbowGradiant; // for line mode
+var gyrPattern;
 var showDisabledBlocks = true;
 var disabledColor = "#101010";
 var lineModeFilled = false;
@@ -55,6 +56,38 @@ var gain = context.createGain();
 
 var movingRainbowOffset =0;
 function choseColor(index,value,disabled){
+  if(disabled){
+    return disabledColor;
+  }
+
+  switch (currentColor) {
+    case "gyr":
+
+      for(let i=0;i<colorTresholdes.length;i++){
+
+        if(value<=colorTresholdes[i]){
+          return colors[i];
+        }
+      }
+      break;
+    case "singleColor":
+    return barColor;
+    break;
+    case "rainbow":
+    return rainbowColors[index];
+    break;
+    case "movingRainbow":
+    movingRainbowOffset -= movingRainbowSpeed;
+    return  rainbowColors[(Math.abs(index +Math.floor(movingRainbowOffset)))% rainbowColors.length];
+    default:
+        return "#ffffff";
+  }
+
+
+
+}
+
+function chosePattern(index,value,disabled){
   if(disabled){
     return disabledColor;
   }
@@ -187,7 +220,12 @@ if(currentStyle== "lineMode"){
   if(currentColor =="rainbow"||currentColor=="movingRainbow"){
     ctx.fillStyle = rainbowGradiant;
     ctx.strokeStyle = rainbowGradiant;
-  }else{
+    }else if(currentColor =="gyr"){
+      ctx.fillStyle = gyrPattern;
+      ctx.strokeStyle = gyrPattern;
+
+
+    }else{
     ctx.fillStyle = barColor;
     ctx.strokeStyle = barColor;
     }
@@ -295,7 +333,7 @@ for(let i=barCount*1.25 ;i<barCount*1.5;i++){
 }
 generateRainbow();
 
-function generateRainbowGradiant(){
+function generateGradiants(){
   //for line mode
   rainbowGradiant = ctx.createLinearGradient(0, 0, canvas.width, 0);
   rainbowGradiant.addColorStop(0, "red");
@@ -304,13 +342,24 @@ function generateRainbowGradiant(){
   rainbowGradiant.addColorStop(0.75,"cyan")
   rainbowGradiant.addColorStop(1,"blue")
 
+  var tmpCanvas = document.createElement("canvas");
+  tmpCanvas.width = canvas.width;
+  tmpCanvas.height = canvas.height;
+  var tmpCtx = tmpCanvas.getContext("2d");
+
+
+  for(let i=colorTresholdes.length-1;i>=0;i--){
+    tmpCtx.fillStyle = colors[i]
+   tmpCtx.fillRect(0,canvas.height-canvas.height* colorTresholdes[i]/255,canvas.width, canvas.height);
+  }
+  gyrPattern = ctx.createPattern(tmpCanvas,"no-repeat");
 }
 window.addEventListener('resize', resize);
 function resize(){
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 generateSquares()
-generateRainbowGradiant();
+generateGradiants();
  console.log("resized")
 }
 resize();
