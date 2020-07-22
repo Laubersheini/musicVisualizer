@@ -94,23 +94,17 @@ function chosePattern(index,value,disabled){
 
   switch (currentColor) {
     case "gyr":
+      return gyrPattern;
 
-      for(let i=0;i<colorTresholdes.length;i++){
-
-        if(value<=colorTresholdes[i]){
-          return colors[i];
-        }
-      }
       break;
     case "singleColor":
     return barColor;
     break;
     case "rainbow":
-    return rainbowColors[index];
+    return rainbowGradiant
     break;
     case "movingRainbow":
-    movingRainbowOffset -= movingRainbowSpeed;
-    return  rainbowColors[(Math.abs(index +Math.floor(movingRainbowOffset)))% rainbowColors.length];
+    return rainbowGradiant; // TODO: needs to move
     default:
         return "#ffffff";
   }
@@ -145,16 +139,17 @@ function render() {
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0,0,canvas.width,canvas.height)
 
-  }
+    }
+    
+    if(currentStyle =="lineMode"){
+     let y =0;
+     let j = 0;
 
-  if(currentStyle =="lineMode"){
-    let y =0;
-    let j = 0;
+     ctx.beginPath();
+     ctx.moveTo(canvas.width/barCount*0.5,canvas.height-freq[i]/255*canvas.height)
 
-    ctx.beginPath();
-    ctx.moveTo(canvas.width/barCount*0.5,canvas.height-freq[i]/255*canvas.height)
+     }
 
-  }
   for (var i = 0; i < freq.length; i++) {
     var value;
 
@@ -163,17 +158,15 @@ function render() {
   //  ctx.fillStyle = "#000000";
     //ctx.fillStyle = "#" + value.toString(16) +""+ (255-value).toString(16)+"00"; for weird colors that slowly blend towards red
 
-  if(currentStyle == "bar")
-  for(let j=colorTresholdes.length-1;j>=0;j--){
-      ctx.fillStyle = choseColor(i,colorTresholdes[j]);
-      if(value<colorTresholdes[j]){
+  if(currentStyle == "bar"){
+      if(currentColor =="rainbow" ||currentColor =="movingRainbow"){
+      ctx.fillStyle = choseColor(i,0,0);
+    }else{
+      ctx.fillStyle = chosePattern(i,0,0);
+    }
         ctx.fillRect(i/barCount*canvas.width ,canvas.height-value/255*canvas.height,
           canvas.width/barCount   ,  canvas.height);
-      }else{
-        ctx.fillRect(i/barCount*canvas.width ,canvas.height-colorTresholdes[j]/255*canvas.height,
-          canvas.width/barCount   ,  canvas.height);
 
-      }
 
 
     }else if(currentStyle == "blockMode"){
@@ -217,18 +210,8 @@ function render() {
 }
 
 if(currentStyle== "lineMode"){
-  if(currentColor =="rainbow"||currentColor=="movingRainbow"){
-    ctx.fillStyle = rainbowGradiant;
-    ctx.strokeStyle = rainbowGradiant;
-    }else if(currentColor =="gyr"){
-      ctx.fillStyle = gyrPattern;
-      ctx.strokeStyle = gyrPattern;
-
-
-    }else{
-    ctx.fillStyle = barColor;
-    ctx.strokeStyle = barColor;
-    }
+      ctx.fillStyle = chosePattern(0,0,0);
+      ctx.strokeStyle = chosePattern(0,0,0);
   if(lineModeFilled){
 
     ctx.lineTo(canvas.width,canvas.height);
