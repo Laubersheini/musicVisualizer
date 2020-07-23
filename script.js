@@ -12,13 +12,14 @@ const colorTresholdes = [170,200,255]//must be sorted
 const circleSpacing = 1;
 
 var rainbowGradiant; // for line mode
+var verticalRainbowGradiant;
 var gyrPattern;
 var showDisabledBlocks = true;
 var disabledColor = "#101010";
 var lineModeFilled = true;
 var backgroundColor = "#000000"
 var movingRainbowSpeed = 0.001;
-var currentColor = "rainbow";
+var currentColor = "verticalRainbow";
 var currentStyle = "circleMode" // "bar", "blockMode","circleMode"
 var rainbowColors = [];
 var barColor = "#ffffff";
@@ -79,6 +80,10 @@ function choseColor(index,value,disabled){
     case "movingRainbow":
     movingRainbowOffset -= movingRainbowSpeed;
     return  rainbowColors[(Math.abs(index +Math.floor(movingRainbowOffset)))% rainbowColors.length];
+    break;
+    case "verticalRainbow":
+    return verticalRainbow[1019-Math.floor(value/255*1020)];
+    break;
     default:
         return "#ffffff";
   }
@@ -107,6 +112,10 @@ function chosePattern(index,value,disabled){
     movingRainbowOffset -= movingRainbowSpeed *1000;
     moveRainbow((Math.abs(index +Math.floor(movingRainbowOffset)))% (canvas.width-1)+1)
     return movedRainbow
+    break;
+    case "verticalRainbow":
+    return verticalRainbowGradiant;
+    break;
     default:
         return "#ffffff";
   }
@@ -275,6 +284,38 @@ function generateSquares(){
     return squareCanvas
 }
 
+var verticalRainbow;
+function generateVerticalRainbow(){
+  verticalRainbow = [];
+  var r = 255;
+  var g = 0;
+  var b = 0;
+  var stepSize = 1
+  const barCount = 255*4;
+  for(let i=0; i<barCount/4;i++){
+    g += stepSize;
+    verticalRainbow[i] = "#"+ Math.round(r).toString(16).padStart(2,"0")+Math.round(g).toString(16).padStart(2,"0")+Math.round(b).toString(16).padStart(2,"0");
+  }
+  //yellow
+
+  for(let i=barCount/4; i<barCount/2;i++){
+    r -= stepSize;
+  verticalRainbow[i] = "#"+ Math.round(r).toString(16).padStart(2,"0")+Math.round(g).toString(16).padStart(2,"0")+Math.round(b).toString(16).padStart(2,"0");
+  }
+//green
+for(let i=barCount/2; i<barCount/4 *3;i++){
+  b += stepSize;
+verticalRainbow[i] = "#"+ Math.round(r).toString(16).padStart(2,"0")+Math.round(g).toString(16).padStart(2,"0")+Math.round(b).toString(16).padStart(2,"0");
+}
+//cyan
+for(let i=barCount/4 *3; i<barCount;i++){
+  g -= stepSize;
+  verticalRainbow[i] = "#"+ Math.round(r).toString(16).padStart(2,"0")+Math.round(g).toString(16).padStart(2,"0")+Math.round(b).toString(16).padStart(2,"0");
+}
+//blue
+
+}
+generateVerticalRainbow();
 
 function generateRainbow(){
   rainbowColors = [];
@@ -346,7 +387,14 @@ function generateGradiants(){
   rainbowGradiant.addColorStop(5/6,"#ff00ff");
   rainbowGradiant.addColorStop(1,"red")
 
-
+  verticalRainbowGradiant =  ctx.createLinearGradient(0, 0,0, canvas.height*1.5);
+  verticalRainbowGradiant.addColorStop(0, "red");
+  verticalRainbowGradiant.addColorStop(1/6,"yellow")
+  verticalRainbowGradiant.addColorStop(2/6, "green");
+  verticalRainbowGradiant.addColorStop(3/6,"cyan");
+  verticalRainbowGradiant.addColorStop(4/6,"blue");
+  verticalRainbowGradiant.addColorStop(5/6,"#ff00ff");
+  verticalRainbowGradiant.addColorStop(1,"red")
 
   movingRainbowCanvas = document.createElement("canvas");
   var tmpCtx2 = movingRainbowCanvas.getContext("2d");
@@ -368,6 +416,8 @@ function generateGradiants(){
   }
   gyrPattern = ctx.createPattern(tmpCanvas,"no-repeat");
 }
+
+
 window.addEventListener('resize', resize);
 function resize(){
 canvas.width = window.innerWidth;
