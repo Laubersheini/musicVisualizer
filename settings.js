@@ -57,7 +57,9 @@ function updateColoring(){
 
 barColor = document.getElementById("singleColor").value;
 currentColor = getRadioValue("coloring");
+updateRainbowMode()
 }
+
 function updateRainbowMode(){
   if(currentColor == "rainbow"||currentColor == "movingRainbow"||currentColor == "verticalRainbow"||currentColor == "movingVerticalRainbow" )
   if(document.getElementById("rainbowMoving").checked && !document.getElementById("rainbowVertical").checked){
@@ -84,15 +86,18 @@ function updateBackgroundColor(){
 backgroundColor = document.getElementById("backgroundColor").value;
  generateSquares()
 }
+
 function updateOffBlocks(){
   showDisabledBlocks = document.getElementById("offBlocks").checked
 
 }
 
+
 function updateLineModeFilled(){
   lineModeFilled = document.getElementById("lineModeFilled").checked
 
 }
+updateLineModeFilled()
 function changeBarCount(){
   var count = parseInt(document.getElementById("barCount").value)
   function power_of_2(n) {
@@ -111,4 +116,13 @@ analyser.fftSize = fftSize;
 generateRainbow();
 }
 
+}
+
+window.onload = function(){
+updateOffBlocks()
+updateBackgroundColor()
+updateColoring()
+
+updateSingleColor()
+updateStyle()
 }
