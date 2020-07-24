@@ -57,6 +57,9 @@ function updateColoring(){
 
 barColor = document.getElementById("singleColor").value;
 currentColor = getRadioValue("coloring");
+if(currentColor == undefined){
+  currentColor = "rainbow"
+}
 updateRainbowMode()
 }
 
@@ -76,34 +79,47 @@ function updateRainbowMode(){
 
 function updateSingleColor(){
 barColor = document.getElementById("singleColor").value;
-
+if(barColor == undefined){
+  barColor = "#ff00ff"
+}
 }
 function updateStyle(){
 currentStyle = getRadioValue("style");
+if(currentStyle == undefined){
+  currentStyle = "circleMode"
+  showDisabledBlocks = true; //enable because it looks better :)
+
+}
 }
 
 function updateBackgroundColor(){
 backgroundColor = document.getElementById("backgroundColor").value;
+if(backgroundColor == ""){
+  backgroundColor = "#000000"
+}
  generateSquares()
 }
 
 function updateOffBlocks(){
   showDisabledBlocks = document.getElementById("offBlocks").checked
-
+  if(showDisabledBlocks == undefined){
+    showDisabledBlocks = true;
+  }
 }
 
 
 function updateLineModeFilled(){
   lineModeFilled = document.getElementById("lineModeFilled").checked
 
+
 }
-updateLineModeFilled()
+
 function changeBarCount(){
   var count = parseInt(document.getElementById("barCount").value)
   function power_of_2(n) {
-   if (typeof n !== 'number')
-        return 'Not a number';
-
+   if (typeof n !== 'number'){
+        return false;
+      }
       return n && (n & (n - 1)) === 0;
   }
 if(power_of_2(count)&&count>=16){
@@ -119,10 +135,12 @@ generateRainbow();
 }
 
 window.onload = function(){
+changeBarCount()
 updateOffBlocks()
 updateBackgroundColor()
 updateColoring()
-
+updateLineModeFilled()
 updateSingleColor()
 updateStyle()
+
 }
