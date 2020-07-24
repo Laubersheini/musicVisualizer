@@ -110,7 +110,7 @@ function chosePattern(index,value,disabled){
     break;
     case "movingRainbow":
     movingRainbowOffset -= movingRainbowSpeed *1000;
-    moveRainbow((Math.abs(index +Math.floor(movingRainbowOffset)))% (canvas.width-1)+1)
+    moveRainbow((Math.abs(index +Math.floor(movingRainbowOffset)))% (canvas.width*1.5-1)+1)
     return movedRainbow
     break;
     case "verticalRainbow":
@@ -375,6 +375,7 @@ function moveRainbow(dx){
 
   movedRainbow = ctx.createPattern(tmpCanvas,"no-repeat")
 }
+
 
 function generateGradiants(){
   //for line mode

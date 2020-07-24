@@ -36,15 +36,6 @@
           </tr>
 
 
-          <tr>
-            <td>
-              <input type="radio" name="coloring"  onchange="updateColoring()" value="movingRainbow">
-              <label>moving rainbow</label>
-            </td>
-            <td>
-              <input type="range" step="0.0001" min="-0.01" max="0.01" value="0.001" oninput="updateRainbowSpeed()" id="rainbowSpeed">
-            </td>
-          </tr>
 
           <tr>
             <td>
@@ -52,17 +43,12 @@
               <label>rainbow</label>
             </td>
             <td>
-
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <input type="radio" name="coloring"  onchange="updateColoring()" value="verticalRainbow">
-              <label>vertical rainbow</label>
-            </td>
-            <td>
-
+              <input type="checkbox" id="rainbowMoving"  onchange="updateRainbowMode()">
+              <label>moving </label>
+              <input type="range" step="0.0001" min="-0.01" max="0.01" value="0.001" oninput="updateRainbowSpeed()" id="rainbowSpeed">
+              <label>moving Speed</label>
+              <input type="checkbox" id="rainbowVertical"  onchange="updateRainbowMode()">
+              <label>verical</label>
             </td>
           </tr>
           </tr>

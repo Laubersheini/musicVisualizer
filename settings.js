@@ -58,6 +58,20 @@ function updateColoring(){
 barColor = document.getElementById("singleColor").value;
 currentColor = getRadioValue("coloring");
 }
+function updateRainbowMode(){
+  if(currentColor == "rainbow"||currentColor == "movingRainbow"||currentColor == "verticalRainbow"||currentColor == "movingVerticalRainbow" )
+  if(document.getElementById("rainbowMoving").checked && !document.getElementById("rainbowVertical").checked){
+    currentColor = "movingRainbow";
+  }else if(document.getElementById("rainbowMoving").checked && document.getElementById("rainbowVertical").checked){
+    currentColor = "movingVerticalRainbow";
+  }else if(!document.getElementById("rainbowMoving").checked && document.getElementById("rainbowVertical").checked){
+    currentColor = "verticalRainbow";
+  }else if(!document.getElementById("rainbowMoving").checked && !document.getElementById("rainbowVertical").checked){
+    currentColor = "rainbow"
+  }
+
+}
+
 function updateSingleColor(){
 barColor = document.getElementById("singleColor").value;
 
