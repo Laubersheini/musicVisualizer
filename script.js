@@ -110,11 +110,16 @@ function chosePattern(index,value,disabled){
     break;
     case "movingRainbow":
     movingRainbowOffset -= movingRainbowSpeed *1000;
-    moveRainbow((Math.abs(index +Math.floor(movingRainbowOffset)))% (canvas.width*1.5-1)+1)
+    moveRainbow(Math.abs(index +Math.floor(movingRainbowOffset% (canvas.width*1.5-2)))+1)
     return movedRainbow
     break;
     case "verticalRainbow":
     return verticalRainbowGradiant;
+    break;
+    case "movingVerticalRainbow":
+    movingRainbowOffset = (movingRainbowOffset + movingRainbowSpeed *1000)%verticalMovingRainbowCanvas.height;
+    moveVerticalRainbow(Math.abs(Math.floor((verticalMovingRainbowCanvas.height-movingRainbowOffset)% (canvas.height*1.5-2)))+1)
+    return movedRainbow;
     break;
     default:
         return "#ffffff";
@@ -363,17 +368,30 @@ generateRainbow();
 
 
 var movingRainbowCanvas;
+var verticalMovingRainbowCanvas;
 var movedRainbow;
 function moveRainbow(dx){
-    console.log(dx)
+  console.log(dx)
   var tmpCanvas = document.createElement("canvas");
   var tmpCtx = tmpCanvas.getContext("2d");
   tmpCanvas.height = canvas.height
   tmpCanvas.width = canvas.width;
-  tmpCtx.drawImage(movingRainbowCanvas,0,0,canvas.width,canvas.height,dx,0,canvas.width-dx,canvas.height);
-  tmpCtx.drawImage(movingRainbowCanvas,canvas.width*1.5-dx,0,dx,canvas.height,0,0,dx,canvas.height);
+  tmpCtx.drawImage(movingRainbowCanvas,0,0,movingRainbowCanvas.width-dx,canvas.height,dx,0,movingRainbowCanvas.width,canvas.height);
+  tmpCtx.drawImage(movingRainbowCanvas,movingRainbowCanvas.width-dx,0,dx,canvas.height,0,0,dx,canvas.height);
 
   movedRainbow = ctx.createPattern(tmpCanvas,"no-repeat")
+}
+function moveVerticalRainbow(dy){
+  console.log(dy)
+//  console.log(verticalMovingRainbowCanvas.height-dy)
+  var tmpCanvas = document.createElement("canvas");
+  var tmpCtx = tmpCanvas.getContext("2d");
+  tmpCanvas.height = canvas.height
+  tmpCanvas.width = canvas.width;
+  tmpCtx.drawImage(verticalMovingRainbowCanvas,0,0,verticalMovingRainbowCanvas.width,verticalMovingRainbowCanvas.height-dy,0,dy,verticalMovingRainbowCanvas.width,verticalMovingRainbowCanvas.height);
+  tmpCtx.drawImage(verticalMovingRainbowCanvas,0,verticalMovingRainbowCanvas.height-dy,canvas.width,dy,0,0,canvas.width,dy);
+  movedRainbow = ctx.createPattern(tmpCanvas,"no-repeat")
+
 }
 
 
@@ -382,7 +400,7 @@ function generateGradiants(){
   rainbowGradiant = ctx.createLinearGradient(0, 0, canvas.width*1.5, 0);
   rainbowGradiant.addColorStop(0, "red");
   rainbowGradiant.addColorStop(1/6,"yellow")
-  rainbowGradiant.addColorStop(2/6, "green");
+  rainbowGradiant.addColorStop(2/6, "#00ff00");
   rainbowGradiant.addColorStop(3/6,"cyan");
   rainbowGradiant.addColorStop(4/6,"blue");
   rainbowGradiant.addColorStop(5/6,"#ff00ff");
@@ -391,7 +409,7 @@ function generateGradiants(){
   verticalRainbowGradiant =  ctx.createLinearGradient(0, 0,0, canvas.height*1.5);
   verticalRainbowGradiant.addColorStop(0, "red");
   verticalRainbowGradiant.addColorStop(1/6,"yellow")
-  verticalRainbowGradiant.addColorStop(2/6, "green");
+  verticalRainbowGradiant.addColorStop(2/6, "#00ff00");
   verticalRainbowGradiant.addColorStop(3/6,"cyan");
   verticalRainbowGradiant.addColorStop(4/6,"blue");
   verticalRainbowGradiant.addColorStop(5/6,"#ff00ff");
@@ -403,6 +421,13 @@ function generateGradiants(){
   movingRainbowCanvas.height = canvas.height;
   tmpCtx2.fillStyle = rainbowGradiant;
   tmpCtx2.fillRect(0,0,movingRainbowCanvas.width,movingRainbowCanvas.height)
+
+  verticalMovingRainbowCanvas = document.createElement("canvas");
+  tmpCtx2 = verticalMovingRainbowCanvas.getContext("2d");
+  verticalMovingRainbowCanvas.width = canvas.width;
+  verticalMovingRainbowCanvas.height = canvas.height*1.5;
+  tmpCtx2.fillStyle = verticalRainbowGradiant;
+  tmpCtx2.fillRect(0,0,verticalMovingRainbowCanvas.width,verticalMovingRainbowCanvas.height)
 
 
 
