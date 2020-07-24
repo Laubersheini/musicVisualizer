@@ -84,6 +84,11 @@ function choseColor(index,value,disabled){
     case "verticalRainbow":
     return verticalRainbow[1019-Math.floor(value/255*1020)];
     break;
+    case "movingVerticalRainbow":
+    movingRainbowOffset -= movingRainbowSpeed;
+    return  verticalRainbow[Math.floor(+Math.abs(((1529-value/255*1530) -movingRainbowOffset)% verticalRainbow.length))];
+
+    break;
     default:
         return "#ffffff";
   }
@@ -319,6 +324,17 @@ for(let i=barCount/4 *3; i<barCount;i++){
 }
 //blue
 
+//fade back to red for the moving rainbow mode
+for(let i=barCount; i<barCount*1.25;i++){
+  r += stepSize;
+  verticalRainbow[i] = "#"+ Math.round(r).toString(16).padStart(2,"0")+Math.round(g).toString(16).padStart(2,"0")+Math.round(b).toString(16).padStart(2,"0");
+}
+//violet
+for(let i=barCount*1.25 ;i<barCount*1.5;i++){
+  b -= stepSize;
+  verticalRainbow[i] = "#"+ Math.round(r).toString(16).padStart(2,"0")+Math.round(g).toString(16).padStart(2,"0")+Math.round(b).toString(16).padStart(2,"0");
+}
+//red
 }
 generateVerticalRainbow();
 
