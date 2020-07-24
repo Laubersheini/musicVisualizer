@@ -162,28 +162,36 @@ function render() {
 
     }
 
-    if(currentStyle =="lineMode"){
-     let y =0;
-     let j = 0;
+      //code run once per drawCyle
+      switch (currentStyle) {
+        case "lineMode":
+          let y =0;
+          let j = 0;
 
-     ctx.beginPath();
-     ctx.moveTo(canvas.width/barCount*0.5,canvas.height-freq[i]/255*canvas.height)
+          ctx.beginPath();
+          ctx.moveTo(canvas.width/barCount*0.5,canvas.height-freq[i]/255*canvas.height)
 
-     }
+          break;
+          case "bar":
+            if(currentColor != "rainbow" &&currentColor !="movingRainbow" ){
+              ctx.fillStyle = chosePattern(i,0,0);
+            }
+          break;
+        default:
 
+      }
+
+   
+
+//code run for each bar:
   for (var i = 0; i < freq.length; i++) {
     var value;
 
       value = freq[i];
-//console.log(value);
-  //  ctx.fillStyle = "#000000";
-    //ctx.fillStyle = "#" + value.toString(16) +""+ (255-value).toString(16)+"00"; for weird colors that slowly blend towards red
 
   if(currentStyle == "bar"){
       if(currentColor =="rainbow" ||currentColor =="movingRainbow"){
       ctx.fillStyle = choseColor(i,0,0);
-    }else{
-      ctx.fillStyle = chosePattern(i,0,0);
     }
         ctx.fillRect(i/barCount*canvas.width ,canvas.height-value/255*canvas.height,
           canvas.width/barCount   ,  canvas.height);
@@ -291,7 +299,6 @@ function generateSquares(){
 
 
     }
-    return squareCanvas
 }
 
 var verticalRainbow;
